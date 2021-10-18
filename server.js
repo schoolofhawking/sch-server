@@ -6,30 +6,21 @@ const morgan = require("morgan");
 import cookieParser from "cookie-parser";
 const path = require("path");
 const app = express();
-
-
-
-
-
-
-
-
-
-
+require('dotenv').config()
 
 
 
 
 // connect DB
-// mongoose
-//   .connect(process.env.MONGO_DB, {
-//     useNewUrlParser: true,
-//     useFindAndModify: false,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true,
-//   })
-//   .then(() => console.log("MongoDB is connected"))
-//   .catch((err) => console.log("DB CONNECTION ERROR", err));
+mongoose
+  .connect(process.env.MONGO_DB, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then(() => console.log("MongoDB is connected"))
+  .catch((err) => console.log("DB CONNECTION ERROR", err));
 
 
 
