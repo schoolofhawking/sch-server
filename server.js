@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import { readdirSync } from "fs";
+let express =require("express") ;
+let cors =require('cors');
+let mongoose = require("mongoose");
+let fs =require("fs") ;
 const morgan = require("morgan");
 // import cookieParser from "cookie-parser";
 const path = require("path");
@@ -26,8 +26,6 @@ mongoose
 
 
 
-
-
 // apply middlewares
 app.use(cors({credentials: true, origin: process.env.FRONT_END_URL}));
 
@@ -42,7 +40,7 @@ app.use(morgan("dev"));
 
 
 // route - This func is for importing routes files automaticaly. so we dont need to import separately
-readdirSync("./routes").map((r) => app.use("/", require(`./routes/${r}`)));
+fs.readdirSync("./routes").map((r) => app.use("/", require(`./routes/${r}`)));
 
 // port
 const port = process.env.PORT || 2000;

@@ -1,6 +1,6 @@
-import User from "../models/user";
+let User =require( "../models/user");
 var bcrypt=require('bcrypt')
-import jwt from "jsonwebtoken";
+let jwt =require( "jsonwebtoken");
 
 
 //  signup
