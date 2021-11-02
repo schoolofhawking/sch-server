@@ -3,11 +3,12 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { readdirSync } from "fs";
 const morgan = require("morgan");
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
 const path = require("path");
 const app = express();
 require('dotenv').config()
-
+const cookieParser = require('cookie-parser')
+app.use(cookieParser());
 
 
 
@@ -27,10 +28,10 @@ mongoose
 
 
 
-
-
 // apply middlewares
-app.use(cors());
+app.use(cors({credentials: true, origin: process.env.FRONT_END_URL}));
+
+
 //serve static files
 app.use(express.static("images"));
 
@@ -39,7 +40,6 @@ app.use(express.json({ limit: "50mb" }));
 app.use(morgan("dev"));
 
 
-app.use(cookieParser());
 
 // route - This func is for importing routes files automaticaly. so we dont need to import separately
 readdirSync("./routes").map((r) => app.use("/", require(`./routes/${r}`)));
