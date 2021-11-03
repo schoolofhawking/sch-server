@@ -1,4 +1,4 @@
-let User =require( "../models/user");
+let User=require('../models/user')
 var bcrypt=require('bcrypt')
 let jwt =require( "jsonwebtoken");
 
