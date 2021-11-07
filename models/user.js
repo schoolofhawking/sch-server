@@ -29,6 +29,10 @@ const userSchema = new Schema(
             type: String,
            default:1        //for normal user role=1, ADMIN ROLE=0
         },
+        isBlocked: {
+            type: Boolean,
+            default: false
+        }
     },
     {timestamps:true}
 );
