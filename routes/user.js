@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
+const userController = require('../controllers/user')
+const {userAuth} = require('../middlewares/userAuth')
 
+router.post('/signup', userController.signup)
 
-router.get('/',(req,res)=>{
-    
+// routes beneath this middleware will be protected by jwt
+router.use(userAuth);
 
-    res.send('HI WELCOME TO SCH SERVER')
-})
-
-
-
+router.get('/test', userController.home)   
 
 module.exports = router;
