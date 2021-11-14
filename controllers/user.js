@@ -21,8 +21,10 @@ module.exports = {
         /"/g,
         ""
       );
-      return res.status(422).json({
+      console.log(message);
+      return res.json({
         error: true,
+        data: "",
         message: message,
       });
     }
@@ -32,8 +34,9 @@ module.exports = {
       let userExist = await User.findOne({ email: req.body.email });
       if (userExist) {
         console.log("user already exists")
-        return res.status(422).json({
-          email: true,
+        return res.json({
+          error: true,
+          data:"",
           message: "Email is already taken, try another email.",
         });
       }
@@ -67,6 +70,7 @@ module.exports = {
         mobileNumber: savedUser.mobileNumber,
         jwtToken: token,
       }
+      console.log(responseData,"registration Success");
 
       // send user as json response
       res.json({
