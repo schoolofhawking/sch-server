@@ -6,6 +6,9 @@ const {userAuth} = require('../middlewares/userAuth')
 
 router.post('/signup', userController.signup)
 router.post ('/login',userController.login)
+
+router.post('/googleSignup', userController.googleSignup)
+router.post('/googleLogin', userController.googleLogin)
 // routes beneath this middleware will be protected by jwt
 router.use(userAuth);
 
