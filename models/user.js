@@ -16,12 +16,10 @@ const userSchema = new Schema(
             lowercase: true
         },
         mobileNumber: {
-            type: String,
-            required: true
+            type: String
         },
         password: {
             type: String,
-            required: true,
             min: 6,
             max: 64
         },
@@ -32,6 +30,10 @@ const userSchema = new Schema(
         isBlocked: {
             type: Boolean,
             default: false
+        },
+        loginType:{
+            type:String,
+            default:'Manual'
         }
     },
     {timestamps:true}

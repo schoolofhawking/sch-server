@@ -173,4 +173,141 @@ module.exports = {
       console.log("hai");
     } catch (err) {}
   },
+
+  // for google sig
+
+  googleSignup:async(req,res)=>{
+
+    console.log(req.body);
+
+
+    try{
+
+
+      let userExists=await User.findOne({ email: req.body.email });
+
+      if(userExists)
+      {
+        return res.json({
+          error: true,
+          data: "",
+          message: "Email is already registered. Please login",
+        });
+
+        // user prompts to login automatically 
+
+        // this.googleLogin(req);
+      }
+      else
+
+      {
+        const user = new User({
+          fullName: req.body.userName,
+          email: req.body.email,
+          mobileNumber:'',
+          loginType: "google"
+        });
+
+        let savedUser = await user.save();
+
+        // create signed jwt
+        const token = await jwt.sign(
+          { _id: savedUser._id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "30d",
+          }
+        );
+  
+        // send token in cookie
+        const cookie = req.cookies.token;
+  
+        res.cookie("authToken", token);
+  
+        let responseData = {
+          _id: savedUser._id,
+          fullName: savedUser.fullName,
+          email: savedUser.email,
+          mobileNumber: "",
+          jwtToken: token,
+        };
+        console.log(responseData, "registration Success");
+  
+        // send user as json response
+        res.json({
+          error: false,
+          data: responseData,
+          message: "Registered successfully",
+        });
+
+      }
+    }
+    catch(err)
+    {
+      
+      console.log("err",err)
+      res.json({
+      error: err,
+      message: err,
+    });
+
+    }
+     
+
+  },
+
+  googleLogin:async(req,res)=>{
+
+    try {
+      console.log(req.body)
+      let user = await User.findOne({ email: req.body.email });
+      if (user) {
+
+        const token = await jwt.sign(
+          { _id: user._id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "30d",
+          }
+        );
+        // send token in cookie
+        const cookie = req.cookies.token;
+
+        res.cookie("authToken", token);
+
+        let responseData = {
+          _id: user._id,
+          fullName: user.fullName,
+          email: user.email,
+          mobileNumber: "",
+          jwtToken: token,
+        };
+
+        res.json({
+          error: false,
+          data: responseData,
+          message: "Login Successfully",
+        });
+
+        
+      } else {
+        console.log("I dont know this guy");
+ 
+        res.json({
+          error: true,
+          data: responseData,
+          message: "User is not registered yet",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+
+      res.status(500).json({
+        error: true,
+        message: err + "",
+      });
+
+
+    }
+  }
 };
