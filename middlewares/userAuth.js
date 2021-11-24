@@ -35,6 +35,7 @@ export const userAuth = async (req, res, next) => {
                     message: 'User no longer exist'
                 })
             }
+            console.log("Middleware Success");
 
             req.user = userDetails;
             next();

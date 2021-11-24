@@ -13,5 +13,5 @@ router.post('/googleLogin', userController.googleLogin)
 router.use(userAuth);
 
 router.get('/test', userController.home)   
-
+router.get('/getProfileData',userController.getProfileData)
 module.exports = router;

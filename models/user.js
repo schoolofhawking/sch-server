@@ -34,7 +34,8 @@ const userSchema = new Schema(
         loginType:{
             type:String,
             default:'Manual'
-        }
+        },
+        metaData:{}
     },
     {timestamps:true}
 );

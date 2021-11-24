@@ -65,16 +65,16 @@ module.exports = {
         } else {
 
           res.json({
-            error:true,
-            passwordErr:true,
+            error: true,
+            passwordErr: true,
             message: 'Incorrect password! Please check your password and try again'
           })
         }
       } else {
 
         res.json({
-          error:true,
-          emailErr:true,
+          error: true,
+          emailErr: true,
           message: 'Incorrect Email! Please check your Email and try again'
         })
 
@@ -171,23 +171,22 @@ module.exports = {
   home: async (req, res) => {
     try {
       console.log("hai");
-    } catch (err) {}
+    } catch (err) { }
   },
 
   // for google sig
 
-  googleSignup:async(req,res)=>{
+  googleSignup: async (req, res) => {
 
     console.log(req.body);
 
 
-    try{
+    try {
 
 
-      let userExists=await User.findOne({ email: req.body.email });
+      let userExists = await User.findOne({ email: req.body.email });
 
-      if(userExists)
-      {
+      if (userExists) {
         return res.json({
           error: true,
           data: "",
@@ -198,13 +197,11 @@ module.exports = {
 
         // this.googleLogin(req);
       }
-      else
-
-      {
+      else {
         const user = new User({
           fullName: req.body.userName,
           email: req.body.email,
-          mobileNumber:'',
+          mobileNumber: '',
           loginType: "google"
         });
 
@@ -218,12 +215,12 @@ module.exports = {
             expiresIn: "30d",
           }
         );
-  
+
         // send token in cookie
         const cookie = req.cookies.token;
-  
+
         res.cookie("authToken", token);
-  
+
         let responseData = {
           _id: savedUser._id,
           fullName: savedUser.fullName,
@@ -232,7 +229,7 @@ module.exports = {
           jwtToken: token,
         };
         console.log(responseData, "registration Success");
-  
+
         // send user as json response
         res.json({
           error: false,
@@ -242,21 +239,20 @@ module.exports = {
 
       }
     }
-    catch(err)
-    {
-      
-      console.log("err",err)
+    catch (err) {
+
+      console.log("err", err)
       res.json({
-      error: err,
-      message: err,
-    });
+        error: err,
+        message: err,
+      });
 
     }
-     
+
 
   },
 
-  googleLogin:async(req,res)=>{
+  googleLogin: async (req, res) => {
 
     try {
       console.log(req.body)
@@ -289,10 +285,10 @@ module.exports = {
           message: "Login Successfully",
         });
 
-        
+
       } else {
         console.log("I dont know this guy");
- 
+
         res.json({
           error: true,
           data: responseData,
@@ -308,6 +304,27 @@ module.exports = {
       });
 
 
+    }
+  },
+  getProfileData: async (req, res, next) => {
+    try {
+      let userData = req.user
+      let profileData = {
+        profileName:userData.fullName,
+        profileEmail:userData.email,
+        profilePhone:userData.mobileNumber,
+        profileCountry:userData.metaData?.country ?? '-',
+        profileState:userData.metaData?.state ?? '-',
+        profileCity:userData.metaData?.city ?? '-',
+        profileQualification:userData.metaData?.Qualification ?? '-',
+        profileDesignation:userData.metaData?.Designation ?? '-',
+        profileEnable:true
+      }
+      res.json({error:false,profileData})
+
+
+    } catch (err) {
+      console.log(err);
     }
   }
 };
