@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const {
   signupValidation,
   loginValidation,
+  profileUpdateValidation
 } = require("../validations/user/userValidator");
 
 //  signup
@@ -310,18 +311,61 @@ module.exports = {
     try {
       let userData = req.user
       let profileData = {
-        profileName:userData.fullName,
-        profileEmail:userData.email,
-        profilePhone:userData.mobileNumber,
-        profileCountry:userData.metaData?.country ?? '-',
-        profileState:userData.metaData?.state ?? '-',
-        profileCity:userData.metaData?.city ?? '-',
-        profileQualification:userData.metaData?.Qualification ?? '-',
-        profileDesignation:userData.metaData?.Designation ?? '-',
-        profileEnable:true
+        profileName: userData.fullName,
+        profileEmail: userData.email,
+        profilePhone: userData.mobileNumber,
+        profileCountry: userData.metaData?.country ?? '-',
+        profileState: userData.metaData?.state ?? '-',
+        profileCity: userData.metaData?.city ?? '-',
+        profileQualification: userData.metaData?.qualification ?? '-',
+        profileDesignation: userData.metaData?.designation ?? '-',
+        profileEnable: true
       }
-      res.json({error:false,profileData})
+      res.json({ error: false, profileData })
 
+
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  updateProfile: async (req, res, next) => {
+    try {
+      const dataValidation = await profileUpdateValidation(req.body);
+      if (dataValidation.error) {
+        const message = dataValidation.error.details[0].message.replace(/"/g, "");
+        console.log(message);
+        return res.json({
+          error: true,
+          data: "",
+          message: message,
+        });
+      }
+      const { fullName, phoneNumber, email, country, state, city, designation, qualification } = req.body
+    
+      let data = {
+        fullName,
+        mobileNumber: phoneNumber,
+        metaData: {
+          country,
+          state,
+          city,
+          designation,
+          qualification
+        }
+      }
+      let userData = await User.findOneAndUpdate({ _id: req.user._id }, data,{upsert:true,new:true})
+      let profileData = {
+        profileName: userData.fullName,
+        profileEmail: userData.email,
+        profilePhone: userData.mobileNumber,
+        profileCountry: userData.metaData?.country ?? '-',
+        profileState: userData.metaData?.state ?? '-',
+        profileCity: userData.metaData?.city ?? '-',
+        profileQualification: userData.metaData?.qualification ?? '-',
+        profileDesignation: userData.metaData?.designation ?? '-',
+        profileEnable: true
+      }
+      res.json({error:false,message:"Profile Updation Successful",profileData})
 
     } catch (err) {
       console.log(err);
