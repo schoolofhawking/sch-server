@@ -16,3 +16,5 @@ router.get('/test', userController.home)
 router.get('/getProfileData',userController.getProfileData)
 router.post('/updateProfile',userController.updateProfile)
 module.exports = router;
+
+module.exports = router;
