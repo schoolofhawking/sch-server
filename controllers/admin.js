@@ -8,7 +8,7 @@ module.exports = {
 
   getUsers: async (req, res) => {
     try {
-      let users = await user.find({});
+      let users = await user.find({role:"1"});
       res.json({
         error: false,
         data: users,
@@ -114,5 +114,42 @@ module.exports = {
         message: "something went wrong",
       });
     }
+  },
+
+  getAdmins:async(req,res)=>{
+
+    try {
+      let users = await user.find({role:"0"});
+      res.json({
+        error: false,
+        data: users,
+      });
+    }
+    catch (err) {
+      res.json({
+        error: true,
+        message: "something went wrong",
+      });
+    }
+
+
+  },
+  DismissAdmin:async(req,res)=>{
+    try {
+      let result = await user.updateOne({ _id: req.body.id }, { $set: { role: "1" } })
+      res.json({
+        error: false
+      });
+      console.log("userr", result);
+    }
+    catch (err) {
+      console.log("userr", err);
+      res.json({
+        error: true,
+        message: "something went wrong",
+      });
+    }
   }
+
+
 };

@@ -10,11 +10,10 @@ router.post ('/login',userController.login)
 router.post('/googleSignup', userController.googleSignup)
 router.post('/googleLogin', userController.googleLogin)
 // routes beneath this middleware will be protected by jwt
-router.use(userAuth);
+// router.use(userAuth);
 
-router.get('/test', userController.home)   
-router.get('/getProfileData',userController.getProfileData)
-router.post('/updateProfile',userController.updateProfile)
+router.get('/test',userAuth, userController.home)   
+router.get('/getProfileData',userAuth,userController.getProfileData)
+router.post('/updateProfile',userAuth,userController.updateProfile)
 module.exports = router;
 
-module.exports = router;

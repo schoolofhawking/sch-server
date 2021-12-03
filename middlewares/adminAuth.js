@@ -12,7 +12,7 @@ export const adminAuth = async (req, res, next) => {
     }
 
     if (!token) {
-        console.log("NO JWT TOKEN");
+        console.log("NO JWT TOKEN)))");
         return res.status(422).json({
             error: true,
             message: 'You are not logged in (try - AdminJwt)'
