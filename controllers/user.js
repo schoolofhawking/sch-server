@@ -1,6 +1,10 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const FileValidation = require('../helpers/FileValidation')
+const fs = require('fs');
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
 
 const {
   signupValidation,
@@ -369,6 +373,39 @@ module.exports = {
 
     } catch (err) {
       console.log(err);
+    }
+  },
+
+  updateProfilePic: async (req, res) => {
+    try {
+      console.log('hai',req.body)
+      console.log('file',req.file)
+
+      let notImage = FileValidation.checkImageType(req.file)
+      if (notImage) {
+        await unlinkAsync(req.file.path)
+        return res.status(200).json({
+          error: true,
+          message: notImage
+        })
+      }
+
+      let updated = await User.updateOne({_id:req.user._id},{
+        $set: {
+          profileImage: `user/${req.file.filename}`
+        }
+      })
+
+      return res.status(200).json({
+        error: false,
+        message: 'Image uploaded'
+      })
+
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        message: error+''
+      })
     }
   }
 };
