@@ -32,10 +32,14 @@ const userSchema = new Schema(
             default: false
         },
         loginType:{
+         
             type:String,
             default:'Manual'
         },
-        metaData:{}
+        metaData:{},
+        profileImage: {
+            type: String
+        }
     },
     {timestamps:true}
 );
