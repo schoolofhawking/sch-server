@@ -9,7 +9,8 @@ const app = express();
 require('dotenv').config()
 const cookieParser = require('cookie-parser')
 app.use(cookieParser());
-
+const usersRouter=require('./routes/user')
+const adminRouter=require('./routes/admin')
 
 
 // connect DB
@@ -38,9 +39,10 @@ app.use(express.json({ limit: "50mb" }));
 app.use(morgan("dev"));
 
 
-
-// route - This func is for importing routes files automaticaly. so we dont need to import separately
-fs.readdirSync("./routes").map((r) => app.use("/", require(`./routes/${r}`)));
+app.use('/', usersRouter);
+app.use('/admin', adminRouter);
+// // route - This func is for importing routes files automaticaly. so we dont need to import separately
+// fs.readdirSync("./routes").map((r) => app.use("/", require(`./routes/${r}`)));
 
 // port
 const port = process.env.PORT || 2000;

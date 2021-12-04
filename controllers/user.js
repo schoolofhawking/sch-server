@@ -34,46 +34,53 @@ module.exports = {
       let user = await User.findOne({ email: req.body.email });
       if (user) {
         // compare passwrd
-
-        let passwordMatch = await bcrypt.compare(
-          req.body.password,
-          user.password
-        );
-
-        if (passwordMatch) {
-          // create signed jwt
-          const token = await jwt.sign(
-            { _id: user._id },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "30d",
-            }
+        if (user.isBlocked == false) {
+          let passwordMatch = await bcrypt.compare(
+            req.body.password,
+            user.password
           );
-          // send token in cookie
-          const cookie = req.cookies.token;
 
-          res.cookie("authToken", token);
+          if (passwordMatch) {
+            // create signed jwt
+            const token = await jwt.sign(
+              { _id: user._id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "30d",
+              }
+            );
+            // send token in cookie
+            const cookie = req.cookies.token;
 
-          let responseData = {
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            mobileNumber: user.mobileNumber,
-            jwtToken: token,
-          };
+            res.cookie("authToken", token);
 
+            let responseData = {
+              _id: user._id,
+              fullName: user.fullName,
+              email: user.email,
+              mobileNumber: user.mobileNumber,
+              jwtToken: token,
+            };
+
+            res.json({
+              error: false,
+              data: responseData,
+              message: "Login Successfully",
+            });
+          } else {
+
+            res.json({
+              error: true,
+              passwordErr: true,
+              message: 'Incorrect password! Please check your password and try again'
+            })
+          }
+        }else{
           res.json({
-            error: false,
-            data: responseData,
-            message: "Login Successfully",
-          });
-        } else {
-
-          res.json({
-            error: true,
-            passwordErr: true,
-            message: 'Incorrect password! Please check your password and try again'
-          })
+          error: true,
+          blockErr: true,
+          message: 'Sorry!!! You have been temporarily Blocked by Admin'
+        })
         }
       } else {
 
@@ -345,7 +352,7 @@ module.exports = {
         });
       }
       const { fullName, phoneNumber, email, country, state, city, designation, qualification } = req.body
-    
+
       let data = {
         fullName,
         mobileNumber: phoneNumber,
@@ -357,7 +364,7 @@ module.exports = {
           qualification
         }
       }
-      let userData = await User.findOneAndUpdate({ _id: req.user._id }, data,{upsert:true,new:true})
+      let userData = await User.findOneAndUpdate({ _id: req.user._id }, data, { upsert: true, new: true })
       let profileData = {
         profileName: userData.fullName,
         profileEmail: userData.email,
@@ -369,7 +376,7 @@ module.exports = {
         profileDesignation: userData.metaData?.designation ?? '-',
         profileEnable: true
       }
-      res.json({error:false,message:"Profile Updation Successful",profileData})
+      res.json({ error: false, message: "Profile Updation Successful", profileData })
 
     } catch (err) {
       console.log(err);
