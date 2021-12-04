@@ -385,6 +385,7 @@ module.exports = {
 
   updateProfilePic: async (req, res) => {
     try {
+      console.log(req.user)
       console.log('hai',req.body)
       console.log('file',req.file)
 
