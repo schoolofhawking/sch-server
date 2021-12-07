@@ -12,6 +12,7 @@ export const userAuth = async (req, res, next) => {
     }
 
     if (!token) {
+        console.log("HEHEHE")
         return res.status(422).json({
             error: true,
             message: 'You are not logged in (try - Bearer)'

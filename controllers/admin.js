@@ -56,6 +56,7 @@ module.exports = {
     }
   },
   adminLogin: async (req, res) => {
+    console.log("!!!!!!!!!!!!")
     try {
       const { username, password } = req.body
       let admin = await user.findOne({ email: username })
@@ -141,6 +142,50 @@ module.exports = {
         error: false
       });
       console.log("userr", result);
+    }
+    catch (err) {
+      console.log("userr", err);
+      res.json({
+        error: true,
+        message: "something went wrong",
+      });
+    }
+  },
+
+  AddNewAdmin:async(req,res)=>{
+    try {
+
+      let userExist = await User.findOne({ email: req.body.email });
+      if (userExist) {
+        console.log("user already exists");
+        return res.json({
+          error: true,
+          data: "",
+          message: "Email is already taken, try another email.",
+        });
+      }
+else
+{
+      // password hashing
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      //register
+      const user = new User({
+        fullName: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+        mobileNumber: "",
+        role:'0'
+      });
+      let savedUser = await user.save();
+
+      return res.json({
+        error: false,
+        data: "",
+        message: "successfuly added new admin",
+      }); 
+    }
+
     }
     catch (err) {
       console.log("userr", err);

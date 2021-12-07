@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 export const adminAuth = async (req, res, next) => {
+
+    console.log(req.headers)
     // 1) check if the token is there
     let token;
     if (
