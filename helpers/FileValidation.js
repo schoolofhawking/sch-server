@@ -4,9 +4,8 @@ module.exports = {
     checkImageType: (file) => {
         console.log('fillle:',file)
         const filetypes = /jpg|jpeg|png/ // Choose Types you want...
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
+        const extname = filetypes.test(path.extname(file.name).toLowerCase())
         const mimetype = filetypes.test(file.mimetype)
-    
         if (extname && mimetype) {
             return false
         } else {
