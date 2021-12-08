@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const AWS = require('aws-sdk')
 const FileValidation = require('../helpers/FileValidation')
 const fs = require('fs');
 const { promisify } = require('util')
@@ -75,12 +76,12 @@ module.exports = {
               message: 'Incorrect password! Please check your password and try again'
             })
           }
-        }else{
+        } else {
           res.json({
-          error: true,
-          blockErr: true,
-          message: 'Sorry!!! You have been temporarily Blocked by Admin'
-        })
+            error: true,
+            blockErr: true,
+            message: 'Sorry!!! You have been temporarily Blocked by Admin'
+          })
         }
       } else {
 
@@ -385,34 +386,50 @@ module.exports = {
 
   updateProfilePic: async (req, res) => {
     try {
-      console.log(req.user)
-      console.log('hai',req.body)
-      console.log('file',req.file)
+      let profileImg = req.files.image
+      console.log(profileImg, "file data");
+      let notImage = FileValidation.checkImageType(profileImg)
+      if (notImage == false) {
+        let s3bucket = new AWS.S3({
+          accessKeyId: process.env.IAM_ACCESS_KEY,
+          secretAccessKey: process.env.IAM_SECRET_KEY,
+          Bucket: process.env.AWS_USER_BUCKET
+        });
+        s3bucket.createBucket(function () {
+          var params = {
+            Bucket: process.env.AWS_USER_BUCKET,
+            Key: '' + req.user._id + '.jpg',
+            Body: profileImg.data
+          };
+          s3bucket.upload(params, function (err, data) {
+            if (err) {
+              console.log('error in callback');
+              console.log(err);
+              return res.json({
+                error: true,
+                message: 'Image Upload Failed!!'
+              })
+            } else {
+              console.log('<<===S3 IMG UPLOAD SUCCESS===>>');
+              console.log(data);
+              return res.json({
+                error: false,
+                message: 'Image uploaded Successfully'
+              })
+            }
 
-      let notImage = FileValidation.checkImageType(req.file)
-      if (notImage) {
-        await unlinkAsync(req.file.path)
-        return res.status(200).json({
+          });
+        });
+      }else{
+        return res.json({
           error: true,
-          message: notImage
+          message: 'File is not an Image'
         })
       }
-
-      let updated = await User.updateOne({_id:req.user._id},{
-        $set: {
-          profileImage: `user/${req.file.filename}`
-        }
-      })
-
-      return res.status(200).json({
-        error: false,
-        message: 'Image uploaded'
-      })
-
     } catch (error) {
-      return res.status(500).json({
+      return res.json({
         error: true,
-        message: error+''
+        message: 'Server Error!!!'
       })
     }
   }

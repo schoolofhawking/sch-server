@@ -2,6 +2,7 @@ let express =require("express") ;
 let cors =require('cors');
 let mongoose = require("mongoose");
 let fs =require("fs") ;
+const fileupload = require('express-fileupload')
 const morgan = require("morgan");
 // import cookieParser from "cookie-parser";
 const path = require("path");
@@ -13,6 +14,7 @@ const usersRouter=require('./routes/user')
 const adminRouter=require('./routes/admin')
 
 
+app.use(fileupload())
 // connect DB
 mongoose
   .connect(process.env.MONGO_DB, {
