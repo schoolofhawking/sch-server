@@ -157,11 +157,11 @@ module.exports = {
 
       let userExist = await User.findOne({ email: req.body.email });
       if (userExist) {
-        console.log("user already exists");
+        let result = await user.updateOne({ email: req.body.email }, { $set: { role: 0 } })
         return res.json({
-          error: true,
+          error: false,
           data: "",
-          message: "Email is already taken, try another email.",
+          message: "The user with name "+userExist.fullName+" Has been updated to Admin role..! Password and fullname cant be changed but updated to admin position!!!",
         });
       }
 else
