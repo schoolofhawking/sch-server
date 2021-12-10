@@ -15,7 +15,9 @@ const adminRouter=require('./routes/admin')
 
 
 app.use(fileupload())
+
 // connect DB
+// use this "process.env.LOCAL_MONGO_DB" connection string for local db
 mongoose
   .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
@@ -25,9 +27,6 @@ mongoose
   })
   .then(() => console.log("MongoDB is connected"))
   .catch((err) => console.log("DB CONNECTION ERROR", err));
-
-
-
 
 // apply middlewares
 app.use(cors({credentials: true, origin: process.env.FRONT_END_URL}));

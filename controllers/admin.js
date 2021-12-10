@@ -60,6 +60,7 @@ module.exports = {
     try {
       const { username, password } = req.body
       let admin = await user.findOne({ email: username })
+      console.log('add',admin)
       if (!admin) {
         res.json({
           error: true,
