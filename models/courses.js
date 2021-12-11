@@ -20,11 +20,7 @@ const courseSchema = new Schema(
         },
         courseDescription: {
             type: String,
-            trim: true,
             required: [true, "description is required"],
-        },
-        courseDescription2: {
-            type: String
         },
         courseCategory: {
             type: ObjectId,
@@ -47,8 +43,7 @@ const courseSchema = new Schema(
             type: String
         },
         thumbnailImage: {
-            type: String,
-            required: [true, "thumbnail is required"]
+            type: String
         },
         discountPercentage: {
             type: Number,
@@ -56,18 +51,6 @@ const courseSchema = new Schema(
         subCourses: [{
             type: String,
         }],
-        role: {
-            type: String,
-            default: 1        //for normal user role=1, ADMIN ROLE=0
-        },
-        isBlocked: {
-            type: Boolean,
-            default: false
-        },
-        loginType: {
-            type: String,
-            default: 'Manual'
-        },
         metaData: {},
         profileImage: {
             type: String
