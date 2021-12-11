@@ -7,9 +7,10 @@ const addCourseValidation=(data)=>{
 
         name:Joi.string().required(),
         author: Joi.string().required(),
-        // category:Joi.objectId().required(),
+        courseCategory:Joi.objectId().required(),
         duration: Joi.string(),
-        description: Joi.string().required(),
+        courseDescription: Joi.string().required(),
+        demoVideo: Joi.number().required(),
         actualPrice:Joi.number().required(),
         discountPrice: Joi.number().required(),
     })

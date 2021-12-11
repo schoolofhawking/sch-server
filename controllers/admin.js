@@ -9,7 +9,7 @@ module.exports = {
 
   getUsers: async (req, res) => {
     try {
-      let users = await user.find({role:"1"});
+      let users = await user.find({ role: "1" });
       res.json({
         error: false,
         data: users,
@@ -61,7 +61,7 @@ module.exports = {
     try {
       const { username, password } = req.body
       let admin = await user.findOne({ email: username })
-      console.log('add',admin)
+      console.log('add', admin)
       if (!admin) {
         res.json({
           error: true,
@@ -97,10 +97,10 @@ module.exports = {
               error: false,
               data: responseData
             })
-          }else{
+          } else {
             res.json({
               error: true,
-              message: "Mr."+admin.fullName+", Your Password is Wrong!!!"
+              message: "Mr." + admin.fullName + ", Your Password is Wrong!!!"
             })
           }
         } else {
@@ -119,10 +119,10 @@ module.exports = {
     }
   },
 
-  getAdmins:async(req,res)=>{
+  getAdmins: async (req, res) => {
 
     try {
-      let users = await user.find({role:"0"});
+      let users = await user.find({ role: "0" });
       res.json({
         error: false,
         data: users,
@@ -137,7 +137,7 @@ module.exports = {
 
 
   },
-  DismissAdmin:async(req,res)=>{
+  DismissAdmin: async (req, res) => {
     try {
       let result = await user.updateOne({ _id: req.body.id }, { $set: { role: "1" } })
       res.json({
@@ -154,39 +154,37 @@ module.exports = {
     }
   },
 
-  AddNewAdmin:async(req,res)=>{
+  AddNewAdmin: async (req, res) => {
     try {
-
       let userExist = await User.findOne({ email: req.body.email });
       if (userExist) {
         let result = await user.updateOne({ email: req.body.email }, { $set: { role: 0 } })
         return res.json({
           error: false,
           data: "",
-          message: "The user with name "+userExist.fullName+" Has been updated to Admin role..! Password and fullname cant be changed but updated to admin position!!!",
+          message: "The user with name " + userExist.fullName + " Has been updated to Admin role..! Password and fullname cant be changed but updated to admin position!!!",
         });
       }
-else
-{
-      // password hashing
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      else {
+        // password hashing
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-      //register
-      const user = new User({
-        fullName: req.body.name,
-        email: req.body.email,
-        password: hashedPassword,
-        mobileNumber: "",
-        role:'0'
-      });
-      let savedUser = await user.save();
+        //register
+        const user = new User({
+          fullName: req.body.name,
+          email: req.body.email,
+          password: hashedPassword,
+          mobileNumber: "",
+          role: '0'
+        });
+        let savedUser = await user.save();
 
-      return res.json({
-        error: false,
-        data: "",
-        message: "successfuly added new admin",
-      }); 
-    }
+        return res.json({
+          error: false,
+          data: "",
+          message: "successfuly added new admin",
+        });
+      }
 
     }
     catch (err) {
@@ -197,78 +195,81 @@ else
       });
     }
   },
-  getCourseCategories:async(req,res)=>{
 
-try{
-
-  let data = await category.find({});
-  return res.json({
-    error: false,
-    data: data
-  }); 
-
-}
-catch(err){
-
-  return res.json({
-    error: true,
-    data: err,
-    message:"something went wrong"
-  }); 
-
-
-}
-
-  },
-
-  addNewCategory:async(req,res)=>{
-
-    try{
-
-    console.log("rreq",req.body)
-
-    let nameExists=await category.findOne({categoryName:req.body.fieldValues.categoryName})
-    if(nameExists)
-    {
+  getCourseCategories: async (req, res) => {
+    try {
+      let data = await category.find({});
+      return res.json({
+        error: false,
+        data: data
+      });
+    }
+    catch (err) {
       return res.json({
         error: true,
-        message:"Course Name already exists try again with another name"
-      }); 
+        data: err,
+        message: "something went wrong"
+      });
     }
-else
-{
-    const newCategoy=new category({
-
-      categoryName:req.body.fieldValues.categoryName,
-      description1:req.body.fieldValues.description1,
-      description2:req.body.fieldValues.description2
-    })
-
-    await newCategoy.save()
-
-    return res.json({
-      error: false,
-      message:"Course Added successfully"
-    }); 
-  }
-  }
-  catch(err)
-  {
-    console.log(err)
-    return res.json({
-      error: true,
-      data: err,
-      message:"something went wrongg"
-    });  
-  }
   },
-  deActivateCategory:async(req,res)=>{
-    console.log("deeeeactivateeee",req.body);
+
+  getLiveCategories: async (req, res) => {
+    try {
+      let data = await category.find({status:1});
+      return res.json({
+        error: false,
+        data: data
+      });
+    }
+    catch (err) {
+      return res.json({
+        error: true,
+        data: err,
+        message: "something went wrong"
+      });
+    }
+  },
+
+  addNewCategory: async (req, res) => {
+    try {
+      console.log("rreq", req.body)
+      let nameExists = await category.findOne({ categoryName: req.body.fieldValues.categoryName })
+      if (nameExists) {
+        return res.json({
+          error: true,
+          message: "Course Name already exists try again with another name"
+        });
+      }
+      else {
+        const newCategoy = new category({
+          categoryName: req.body.fieldValues.categoryName,
+          description1: req.body.fieldValues.description1,
+          description2: req.body.fieldValues.description2
+        })
+        await newCategoy.save()
+        return res.json({
+          error: false,
+          message: "Course Added successfully"
+        });
+      }
+    }
+    catch (err) {
+      console.log(err)
+      return res.json({
+        error: true,
+        data: err,
+        message: "something went wrongg"
+      });
+    }
+  },
+
+  deActivateCategory: async (req, res) => {
+    console.log("deeeeactivateeee", req.body);
     try {
       let result = await category.updateOne({ _id: req.body.id }, { $set: { status: 0 } })
       res.json({
         error: false,
-        message:"success"
+        message: "success"
       });
       console.log("userr", result);
     }
@@ -281,14 +282,13 @@ else
     }
   },
 
-  activateCategory:async(req,res)=>{
+  activateCategory: async (req, res) => {
     console.log("activateeee");
-
     try {
-      let result = await category.updateOne({ _id: req.body.id }, { $set: { status: 1} })
+      let result = await category.updateOne({ _id: req.body.id }, { $set: { status: 1 } })
       res.json({
         error: false,
-        message:"success"
+        message: "success"
       });
       console.log("userr", result);
     }
@@ -300,7 +300,4 @@ else
       });
     }
   }
-
-
-
 };
