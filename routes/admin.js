@@ -14,7 +14,10 @@ router.post('/BlockUser',adminAuth, admincontroller.blockUser)
 router.get('/getAdmins',adminAuth, admincontroller.getAdmins)
 router.post('/DismissAdmin',adminAuth, admincontroller.DismissAdmin)
 router.post ('/addNewAdmin',adminAuth, admincontroller.AddNewAdmin)
-
+router.get('/getCategories',adminAuth,admincontroller.getCourseCategories)
+router.post('/addNewCategory',adminAuth,admincontroller.addNewCategory)
+router.post('/deActivateCategory',adminAuth,admincontroller.deActivateCategory)
+router.post('/activateCategory',adminAuth,admincontroller.activateCategory)
 // course apis 
 router.post ('/course',adminAuth, courseController.addCourse)
 

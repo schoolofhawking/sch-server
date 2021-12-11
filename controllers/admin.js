@@ -1,6 +1,7 @@
 const user = require("../models/user");
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const category = require("../models/category");
 
 
 //  signup
@@ -195,7 +196,111 @@ else
         message: "something went wrong",
       });
     }
+  },
+  getCourseCategories:async(req,res)=>{
+
+try{
+
+  let data = await category.find({});
+  return res.json({
+    error: false,
+    data: data
+  }); 
+
+}
+catch(err){
+
+  return res.json({
+    error: true,
+    data: err,
+    message:"something went wrong"
+  }); 
+
+
+}
+
+  },
+
+  addNewCategory:async(req,res)=>{
+
+    try{
+
+    console.log("rreq",req.body)
+
+    let nameExists=await category.findOne({categoryName:req.body.fieldValues.categoryName})
+    if(nameExists)
+    {
+      return res.json({
+        error: true,
+        message:"Course Name already exists try again with another name"
+      }); 
+    }
+else
+{
+    const newCategoy=new category({
+
+      categoryName:req.body.fieldValues.categoryName,
+      description1:req.body.fieldValues.description1,
+      description2:req.body.fieldValues.description2
+    })
+
+    await newCategoy.save()
+
+    return res.json({
+      error: false,
+      message:"Course Added successfully"
+    }); 
   }
+  }
+  catch(err)
+  {
+    console.log(err)
+    return res.json({
+      error: true,
+      data: err,
+      message:"something went wrongg"
+    });  
+  }
+  },
+  deActivateCategory:async(req,res)=>{
+    console.log("deeeeactivateeee",req.body);
+    try {
+      let result = await category.updateOne({ _id: req.body.id }, { $set: { status: 0 } })
+      res.json({
+        error: false,
+        message:"success"
+      });
+      console.log("userr", result);
+    }
+    catch (err) {
+      console.log("userr", err);
+      res.json({
+        error: true,
+        message: "something went wrong",
+      });
+    }
+  },
+
+  activateCategory:async(req,res)=>{
+    console.log("activateeee");
+
+    try {
+      let result = await category.updateOne({ _id: req.body.id }, { $set: { status: 1} })
+      res.json({
+        error: false,
+        message:"success"
+      });
+      console.log("userr", result);
+    }
+    catch (err) {
+      console.log("userr", err);
+      res.json({
+        error: true,
+        message: "something went wrong",
+      });
+    }
+  }
+
 
 
 };

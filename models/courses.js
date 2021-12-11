@@ -1,5 +1,6 @@
 let mongoose = require('mongoose')
 const { Schema } = mongoose;
+const {ObjectId} = mongoose.Schema;
 
 const courseSchema = new Schema(
     {
@@ -26,9 +27,9 @@ const courseSchema = new Schema(
             type: String
         },
         courseCategory: {
-            type: String,
-            min: 6,
-            max: 64
+            type: ObjectId,
+            ref: 'category',
+            required:true
         },
         actualPrice: {
             type: Number,
