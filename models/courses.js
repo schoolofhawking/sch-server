@@ -49,7 +49,8 @@ const courseSchema = new Schema(
             type: Number,
         },
         subCourses: [{
-            type: String,
+            type: ObjectId,
+            ref: 'subcourses',
         }],
         metaData: {},
         profileImage: {
