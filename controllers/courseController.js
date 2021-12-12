@@ -1,4 +1,5 @@
 const Courses = require('../models/courses')
+const SubCourse = require('../models/subcourse')
 const FileValidation = require('../helpers/FileValidation')
 const S3BucketUploads = require('../helpers/S3BucketUploads')
 const AWS = require('aws-sdk')
@@ -103,7 +104,7 @@ module.exports = {
             })
 
             let saveCourse = await courseObj.save()
-            console.log(saveCourse,"Save Course >>>>>");
+            console.log(saveCourse, "Save Course >>>>>");
 
             // Image uploading to s3
             let thumbnailImage = req.files.thumbnail
@@ -150,19 +151,81 @@ module.exports = {
 
     getCourse: async (req, res) => {
         try {
-          let data = await Courses.find({});
-          return res.json({
-            error: false,
-            data: data
-          });
+            let data = await Courses.find({});
+            return res.json({
+                error: false,
+                data: data
+            });
         }
         catch (err) {
             console.log(err);
-          return res.json({
-            error: true,
-            data: err,
-            message: "something went wrong"
-          });
+            return res.json({
+                error: true,
+                data: err,
+                message: "something went wrong"
+            });
         }
-      },
+    },
+
+    getSubCourse: async (req, res) => {
+        try {
+            //Here in Populate we need only the Main Course Name from that object...Try to Figure that out.Presently all details are passed to client
+            let data = await SubCourse.find({}).populate('mainCourseId');
+            console.log(data,"sub");
+            return res.json({
+                error: false,
+                data: data
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return res.json({
+                error: true,
+                data: err,
+                message: "something went wrong"
+            });
+        }
+    },
+
+    addSubCourse: async (req, res) => {
+        const { mainCourseId, subCourseName } = req.body
+        if(mainCourseId=='')
+        {
+            return res.json({
+                error:true,
+                message:"Select A Main Course"
+            })
+        }
+        if(subCourseName=='')
+        {
+            return res.json({
+                error:true,
+                message:"Please Enter a Name for Sub Course"
+            })
+        }
+        let subExist = await SubCourse.findOne({subCourseName,mainCourseId})
+        if(subExist)
+        {
+            return res.json({
+                error:true,
+                message:"A Sub Course with Similar Name Already Exist in This Course"
+            })
+        }else{
+            let subCourse = new SubCourse({
+                subCourseName,
+                mainCourseId
+            })
+            let saveCourse = await subCourse.save()
+            await Courses.updateOne({_id:mainCourseId},{
+                $push:{
+                    subCourses:saveCourse._id
+                }
+            })
+            return res.json({
+                error:false,
+                message:"Sub Course Added Successfully"
+            })
+        }
+        
+    }
 }

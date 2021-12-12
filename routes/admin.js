@@ -22,5 +22,6 @@ router.post('/activateCategory',adminAuth,admincontroller.activateCategory)
 // course apis 
 router.post ('/addCourse',adminAuth, courseController.addCourse)
 router.get('/getCourse',adminAuth,courseController.getCourse)
-
+router.get('/getSubCourse',adminAuth,courseController.getSubCourse)
+router.post('/addSubCourse',adminAuth,courseController.addSubCourse)
 module.exports = router;
