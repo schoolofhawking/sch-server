@@ -6,6 +6,7 @@ const AWS = require('aws-sdk')
 
 const {
     addCourseValidation,
+    subCourseUpdateValidation
 } = require("../validations/course/courseValidation");
 
 // let s3bucket = new AWS.S3({
@@ -171,7 +172,6 @@ module.exports = {
         try {
             //Here in Populate we need only the Main Course Name from that object...Try to Figure that out.Presently all details are passed to client
             let data = await SubCourse.find({}).populate('mainCourseId');
-            console.log(data,"sub");
             return res.json({
                 error: false,
                 data: data
@@ -189,43 +189,74 @@ module.exports = {
 
     addSubCourse: async (req, res) => {
         const { mainCourseId, subCourseName } = req.body
-        if(mainCourseId=='')
-        {
+        if (mainCourseId == '') {
             return res.json({
-                error:true,
-                message:"Select A Main Course"
+                error: true,
+                message: "Select A Main Course"
             })
         }
-        if(subCourseName=='')
-        {
+        if (subCourseName == '') {
             return res.json({
-                error:true,
-                message:"Please Enter a Name for Sub Course"
+                error: true,
+                message: "Please Enter a Name for Sub Course"
             })
         }
-        let subExist = await SubCourse.findOne({subCourseName,mainCourseId})
-        if(subExist)
-        {
+        let subExist = await SubCourse.findOne({ subCourseName, mainCourseId })
+        if (subExist) {
             return res.json({
-                error:true,
-                message:"A Sub Course with Similar Name Already Exist in This Course"
+                error: true,
+                message: "A Sub Course with Similar Name Already Exist in This Course"
             })
-        }else{
+        } else {
             let subCourse = new SubCourse({
                 subCourseName,
                 mainCourseId
             })
             let saveCourse = await subCourse.save()
-            await Courses.updateOne({_id:mainCourseId},{
-                $push:{
-                    subCourses:saveCourse._id
+            await Courses.updateOne({ _id: mainCourseId }, {
+                $push: {
+                    subCourses: saveCourse._id
                 }
             })
             return res.json({
-                error:false,
-                message:"Sub Course Added Successfully"
+                error: false,
+                message: "Sub Course Added Successfully"
             })
         }
-        
+
+    },
+    addVideoSubCourse: async (req, res) => {
+        console.log(req.body);
+        const {subCourseId,vimeoId,vimeoName} = req.body
+        const dataValidation = await subCourseUpdateValidation(req.body);
+        if (dataValidation.error) {
+            const message = dataValidation.error.details[0].message.replace(/"/g, "");
+            return res.json({
+                error: true,
+                message: message,
+            });
+        }
+        const subExist = await SubCourse.findOne({_id:subCourseId})
+        if(subExist)
+        {
+            let data = {
+                videoId:vimeoId,
+                videoName:vimeoName
+            }
+            await SubCourse.updateOne({_id:subCourseId},{
+                $push:{
+                    videoList:data
+                }
+            })
+            return res.json({
+                error: false,
+                message: "Sub Course Video is Added Successfully",
+            });
+        }else{
+            return res.json({
+                error: true,
+                message: "Sub Course Is Invalid",
+            });
+        }
     }
 }

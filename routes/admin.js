@@ -24,4 +24,5 @@ router.post ('/addCourse',adminAuth, courseController.addCourse)
 router.get('/getCourse',adminAuth,courseController.getCourse)
 router.get('/getSubCourse',adminAuth,courseController.getSubCourse)
 router.post('/addSubCourse',adminAuth,courseController.addSubCourse)
+router.post('/subCourseAddVideo',adminAuth,courseController.addVideoSubCourse)
 module.exports = router;
