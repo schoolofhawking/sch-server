@@ -258,5 +258,61 @@ module.exports = {
                 message: "Sub Course Is Invalid",
             });
         }
+    },
+
+    getCourseById:async(req,res)=>{
+
+        try {
+            let data = await Courses.findOne({_id:req.body.id});
+
+            console.log(data)
+            return res.json({
+                error: false,
+                data: data
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return res.json({
+                error: true,
+                data: err,
+                message: "something went wrong"
+            });
+        }
+
+    },
+
+    editCourse:async(req,res)=>{
+console.log(req.body)
+        try {
+            let data = await Courses.updateOne({_id:req.body.fieldValues.id},{
+$set:{
+
+    courseName:req.body.fieldValues.courseName,
+    author:req.body.fieldValues.author,
+    courseDescription:req.body.fieldValues.courseDescription,
+    demoVideo:req.body.fieldValues.demoVideo,
+    discountPercentage:req.body.fieldValues.discountPercentage,
+    duration:req.body.fieldValues.duration,
+    discountPrice:req.body.fieldValues.discountPrice
+
+}
+
+            });
+
+            console.log(data)
+            return res.json({
+                error: false,
+               message:"successfully updated"
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return res.json({
+                error: true,
+                data: err,
+                message: "something went wrong"
+            });
+        }
     }
 }
