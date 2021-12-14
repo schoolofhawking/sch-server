@@ -6,6 +6,7 @@ const subCourseUpdateValidation=(data)=>{
     const Schema = Joi.object({
 
         vimeoName:Joi.string().required(),
+        subDuration:Joi.string().required(),
         subCourseId:Joi.objectId().required(),
         vimeoId: Joi.string().min(6).required(),
     })
