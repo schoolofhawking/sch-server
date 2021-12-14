@@ -16,7 +16,8 @@ const subCourseSchema = new Schema(
         },  
         videoList: [{
             videoName:{type:String},
-            videoId:{type:String}
+            videoId:{type:String},
+            videoDuration:{type:String}
         }],
         
     },

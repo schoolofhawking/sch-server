@@ -171,7 +171,7 @@ module.exports = {
     getSubCourse: async (req, res) => {
         try {
             //Here in Populate we need only the Main Course Name from that object...Try to Figure that out.Presently all details are passed to client
-            let data = await SubCourse.find({}).populate('mainCourseId');
+            let data = await SubCourse.find({}).populate({ path: "mainCourseId", select: ["_id", "courseName"] });
             return res.json({
                 error: false,
                 data: data
@@ -227,7 +227,7 @@ module.exports = {
     },
     addVideoSubCourse: async (req, res) => {
         console.log(req.body);
-        const {subCourseId,vimeoId,vimeoName} = req.body
+        const { subCourseId, vimeoId, vimeoName, subDuration } = req.body
         const dataValidation = await subCourseUpdateValidation(req.body);
         if (dataValidation.error) {
             const message = dataValidation.error.details[0].message.replace(/"/g, "");
@@ -236,23 +236,23 @@ module.exports = {
                 message: message,
             });
         }
-        const subExist = await SubCourse.findOne({_id:subCourseId})
-        if(subExist)
-        {
+        const subExist = await SubCourse.findOne({ _id: subCourseId })
+        if (subExist) {
             let data = {
-                videoId:vimeoId,
-                videoName:vimeoName
+                videoId: vimeoId,
+                videoName: vimeoName,
+                videoDuration: subDuration
             }
-            await SubCourse.updateOne({_id:subCourseId},{
-                $push:{
-                    videoList:data
+            await SubCourse.updateOne({ _id: subCourseId }, {
+                $push: {
+                    videoList: data
                 }
             })
             return res.json({
                 error: false,
                 message: "Sub Course Video is Added Successfully",
             });
-        }else{
+        } else {
             return res.json({
                 error: true,
                 message: "Sub Course Is Invalid",
@@ -260,10 +260,10 @@ module.exports = {
         }
     },
 
-    getCourseById:async(req,res)=>{
+    getCourseById: async (req, res) => {
 
         try {
-            let data = await Courses.findOne({_id:req.body.id});
+            let data = await Courses.findOne({ _id: req.body.id });
 
             console.log(data)
             return res.json({
@@ -282,28 +282,31 @@ module.exports = {
 
     },
 
-    editCourse:async(req,res)=>{
-console.log(req.body)
+    editCourse: async (req, res) => {
+        console.log(req.body)
         try {
-            let data = await Courses.updateOne({_id:req.body.fieldValues.id},{
-$set:{
+            let discountAmount = parseInt(req.body.fieldValues.actualPrice) - parseInt(req.body.fieldValues.discountPrice)
+            let discountPercentage = Math.round((discountAmount / req.body.fieldValues.actualPrice) * 100)
+            let data = await Courses.updateOne({ _id: req.body.fieldValues.id }, {
+                $set: {
 
-    courseName:req.body.fieldValues.courseName,
-    author:req.body.fieldValues.author,
-    courseDescription:req.body.fieldValues.courseDescription,
-    demoVideo:req.body.fieldValues.demoVideo,
-    discountPercentage:req.body.fieldValues.discountPercentage,
-    duration:req.body.fieldValues.duration,
-    discountPrice:req.body.fieldValues.discountPrice
+                    courseName: req.body.fieldValues.courseName,
+                    author: req.body.fieldValues.author,
+                    courseDescription: req.body.fieldValues.courseDescription,
+                    demoVideo: req.body.fieldValues.demoVideo,
+                    actualPrice: req.body.fieldValues.actualPrice,
+                    duration: req.body.fieldValues.duration,
+                    discountPercentage:discountPercentage,
+                    discountPrice: req.body.fieldValues.discountPrice
 
-}
+                }
 
             });
 
             console.log(data)
             return res.json({
                 error: false,
-               message:"successfully updated"
+                message: "successfully updated"
             });
         }
         catch (err) {
