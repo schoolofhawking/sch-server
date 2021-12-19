@@ -152,7 +152,7 @@ module.exports = {
 
     getCourse: async (req, res) => {
         try {
-            let data = await Courses.find({});
+            let data = await Courses.find({}).populate({path:'courseCategory',select:["_id","categoryName"]});
             return res.json({
                 error: false,
                 data: data
