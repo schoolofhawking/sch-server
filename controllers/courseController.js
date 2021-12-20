@@ -263,13 +263,25 @@ module.exports = {
     getCourseById: async (req, res) => {
 
         try {
-            let data = await Courses.findOne({ _id: req.body.id });
+            let data = await Courses.findOne({ _id: req.body.id }).populate('subcourses');
 
-            console.log(data)
+
+         let result=   await getSubCoursePopulated(data.subCourses)
+console.log("This is final result",result)
+
+
+
+
+            console.log("@@@@@@",data)
             return res.json({
                 error: false,
                 data: data
             });
+
+// getting list of subcourses
+
+
+
         }
         catch (err) {
             console.log(err);
@@ -318,4 +330,21 @@ module.exports = {
             });
         }
     }
+}
+
+const getSubCoursePopulated=async (subCoursesArray)=>{
+    console.log("_________",subCoursesArray);
+let resultArray=[]
+
+for (i=0;i<subCoursesArray.length;i++)
+{
+
+    let data=await SubCourse.findOne({_id:subCoursesArray[i]})
+
+ 
+    resultArray.push(data)
+    console.log("dddd",data);
+    
+}
+return resultArray;
 }

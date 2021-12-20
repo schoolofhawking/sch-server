@@ -50,7 +50,7 @@ const courseSchema = new Schema(
         },
         subCourses: [{
             type: ObjectId,
-            ref: 'subcourses',
+            ref: 'subcourse',
         }],
         metaData: {},
         profileImage: {

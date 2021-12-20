@@ -2,7 +2,8 @@
 const express = require('express');
 const admincontroller = require('../controllers/admin');
 const { adminAuth } = require('../middlewares/adminAuth');
-const courseController = require('../controllers/courseController')
+const courseController = require('../controllers/courseController');
+const questionController = require('../controllers/questionController');
 const router = express.Router();
 
 //routes besides this falls under JWT Authentication
@@ -27,4 +28,9 @@ router.get('/getSubCourse',adminAuth,courseController.getSubCourse)
 router.post('/addSubCourse',adminAuth,courseController.addSubCourse)
 router.post('/subCourseAddVideo',adminAuth,courseController.addVideoSubCourse)
 router.put('/editCourse',adminAuth,courseController.editCourse)
+
+
+// question apis-admin side
+router.get('/getQuestions',adminAuth,questionController.getAllQuestions)
+router.post('/addNewQuestion',adminAuth,questionController.addNewQuestion)
 module.exports = router;

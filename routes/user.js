@@ -21,5 +21,6 @@ router.post('/updateProfilePic',userAuth, userController.updateProfilePic)
 
 // course api
 router.get('/getCourses',userAuth,courseController.getCourse)
+router.post('/getSingleCourse',userAuth,courseController.getCourseById)
 
 module.exports = router;
