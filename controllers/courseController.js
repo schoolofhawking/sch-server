@@ -1,5 +1,6 @@
 const Courses = require('../models/courses')
 const SubCourse = require('../models/subcourse')
+const Purchase = require('../models/purchase')
 const FileValidation = require('../helpers/FileValidation')
 const S3BucketUploads = require('../helpers/S3BucketUploads')
 const AWS = require('aws-sdk')
@@ -82,7 +83,7 @@ module.exports = {
             }
 
             // calculating discounts
-            if (req.body.discountPrice >= req.body.actualPrice) {
+            if (parseInt(req.body.discountPrice) >= parseInt(req.body.actualPrice)) {
                 return res.json({
                     error: true,
                     message: 'Discount price should be less than actual price',
@@ -152,7 +153,7 @@ module.exports = {
 
     getCourse: async (req, res) => {
         try {
-            let data = await Courses.find({}).populate({path:'courseCategory',select:["_id","categoryName"]});
+            let data = await Courses.find({}).populate({ path: 'courseCategory', select: ["_id", "categoryName"] });
             return res.json({
                 error: false,
                 data: data
@@ -170,7 +171,6 @@ module.exports = {
 
     getSubCourse: async (req, res) => {
         try {
-            //Here in Populate we need only the Main Course Name from that object...Try to Figure that out.Presently all details are passed to client
             let data = await SubCourse.find({}).populate({ path: "mainCourseId", select: ["_id", "courseName"] });
             return res.json({
                 error: false,
@@ -260,40 +260,6 @@ module.exports = {
         }
     },
 
-    getCourseById: async (req, res) => {
-
-        try {
-            let data = await Courses.findOne({ _id: req.body.id }).populate('subcourses');
-
-
-         let result=   await getSubCoursePopulated(data.subCourses)
-console.log("This is final result",result)
-
-
-
-
-            console.log("@@@@@@",data)
-            return res.json({
-                error: false,
-                data: data
-            });
-
-// getting list of subcourses
-
-
-
-        }
-        catch (err) {
-            console.log(err);
-            return res.json({
-                error: true,
-                data: err,
-                message: "something went wrong"
-            });
-        }
-
-    },
-
     editCourse: async (req, res) => {
         console.log(req.body)
         try {
@@ -308,7 +274,7 @@ console.log("This is final result",result)
                     demoVideo: req.body.fieldValues.demoVideo,
                     actualPrice: req.body.fieldValues.actualPrice,
                     duration: req.body.fieldValues.duration,
-                    discountPercentage:discountPercentage,
+                    discountPercentage: discountPercentage,
                     discountPrice: req.body.fieldValues.discountPrice
 
                 }
@@ -330,6 +296,40 @@ console.log("This is final result",result)
             });
         }
     },
+    getCourseById: async (req, res) => {
 
+        try {
+            let courseData = await Courses.findOne({ _id: req.body.id }).populate({ path: 'courseCategory', select: ["_id", "categoryName"] })
+            //checking whether there is a course in purchase collection with course id and whether the user is purchased it or not
+            let userPurchased = await Purchase.findOne({ courseId: req.body.id, "userList.userId": req.user._id })
+            if(userPurchased)
+            {
+                let subCourseData = await SubCourse.find({mainCourseId:req.body.id})
+                return res.json({
+                    error:false,
+                    purchased:true,
+                    mainCourse:courseData,
+                    subCourse:subCourseData
+                })
+            }else{
+                let subCourseData = await SubCourse.find({mainCourseId:req.body.id},{'videoList.videoId':0})
+                return res.json({
+                    error:false,
+                    purchased:false,
+                    mainCourse:courseData,
+                    subCourse:subCourseData
+                })
+            }
+
+        }
+        catch (err) {
+            console.log(err);
+            return res.json({
+                error: true,
+                data: err,
+                message: "something went wrong"
+            });
+        }
+
+    },
 }
-
