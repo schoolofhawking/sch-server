@@ -6,7 +6,7 @@ const userController = require("../controllers/user");
 const courseController = require("../controllers/courseController");
 const { userAuth } = require("../middlewares/userAuth");
 const questionController = require("../controllers/questionController");
-
+const PaymentGateway=require('../controllers/PaymentGateway')
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
 
@@ -25,4 +25,7 @@ router.post("/getSingleCourse", userAuth, courseController.getCourseById);
 
 // questions api
 router.get("/getQuestionsUser", userAuth, questionController.getAllQuestions);
+//payment gateway
+router.post('/createOrder',userAuth,PaymentGateway.createOrder)
+
 module.exports = router;
