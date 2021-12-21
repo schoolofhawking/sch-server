@@ -329,22 +329,7 @@ console.log("This is final result",result)
                 message: "something went wrong"
             });
         }
-    }
+    },
+
 }
 
-const getSubCoursePopulated=async (subCoursesArray)=>{
-    console.log("_________",subCoursesArray);
-let resultArray=[]
-
-for (i=0;i<subCoursesArray.length;i++)
-{
-
-    let data=await SubCourse.findOne({_id:subCoursesArray[i]})
-
- 
-    resultArray.push(data)
-    console.log("dddd",data);
-    
-}
-return resultArray;
-}
