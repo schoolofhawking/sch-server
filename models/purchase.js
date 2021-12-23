@@ -14,9 +14,17 @@ const purchaseSchema = new Schema(
                 type:ObjectId,
                 ref:'user'
             },
-            transactionId:{
-                type:ObjectId,
+            paymentId:{
+                type:String,
                 ref:'transaction'
+            },
+            orderId:{
+                type:String,
+                trim:true
+            },
+            razorpay_signature:{
+                type:String,
+                trim:true
             }
         }],
         

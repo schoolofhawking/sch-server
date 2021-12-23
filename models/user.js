@@ -1,5 +1,6 @@
 let mongoose =require('mongoose') 
 const {Schema} = mongoose;
+const {ObjectId} = mongoose.Schema;
 
 const userSchema = new Schema(
     {
@@ -39,7 +40,11 @@ const userSchema = new Schema(
         metaData:{},
         profileImage: {
             type: String
-        }
+        },
+        purchasedCourses: [{
+            type: ObjectId,
+            ref: 'courses',
+        }],
     },
     {timestamps:true}
 );

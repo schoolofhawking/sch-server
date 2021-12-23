@@ -27,5 +27,5 @@ router.post("/getSingleCourse", userAuth, courseController.getCourseById);
 router.get("/getQuestionsUser", userAuth, questionController.getAllQuestions);
 //payment gateway
 router.post('/createOrder',userAuth,PaymentGateway.createOrder)
-
+router.post('/purchaseSuccess',userAuth,PaymentGateway.paymentSuccess)
 module.exports = router;
