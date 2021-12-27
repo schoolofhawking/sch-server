@@ -4,6 +4,8 @@ const admincontroller = require('../controllers/admin');
 const { adminAuth } = require('../middlewares/adminAuth');
 const courseController = require('../controllers/courseController');
 const questionController = require('../controllers/questionController');
+const agentController = require('../controllers/agentController');
+
 const router = express.Router();
 
 //routes besides this falls under JWT Authentication
@@ -33,4 +35,9 @@ router.put('/editCourse',adminAuth,courseController.editCourse)
 // question apis-admin side
 router.get('/getQuestions',adminAuth,questionController.getAllQuestions)
 router.post('/addNewQuestion',adminAuth,questionController.addNewQuestion)
+
+//agent referal apis
+
+router.post('/addNewAgent',adminAuth,agentController.addNewAgent)
+router.get('/getAllAgents',adminAuth,agentController.getAllagents)
 module.exports = router;
