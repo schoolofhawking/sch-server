@@ -331,6 +331,7 @@ module.exports = {
         profileCity: userData.metaData?.city ?? '-',
         profileQualification: userData.metaData?.qualification ?? '-',
         profileDesignation: userData.metaData?.designation ?? '-',
+        profileCourse:userData.purchasedCourses ?? [],
         profileEnable: true
       }
       res.json({ error: false, profileData })
@@ -375,6 +376,7 @@ module.exports = {
         profileCity: userData.metaData?.city ?? '-',
         profileQualification: userData.metaData?.qualification ?? '-',
         profileDesignation: userData.metaData?.designation ?? '-',
+        profileCourse:userData.purchasedCourses ?? [],
         profileEnable: true
       }
       res.json({ error: false, message: "Profile Updation Successful", profileData })
