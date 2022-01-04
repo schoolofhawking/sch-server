@@ -6,7 +6,8 @@ const userController = require("../controllers/user");
 const courseController = require("../controllers/courseController");
 const { userAuth } = require("../middlewares/userAuth");
 const questionController = require("../controllers/questionController");
-const PaymentGateway=require('../controllers/PaymentGateway')
+const PaymentGateway=require('../controllers/PaymentGateway');
+const { sendSms } = require("../helpers/sms");
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
 
@@ -28,4 +29,7 @@ router.get("/getQuestionsUser", userAuth, questionController.getAllQuestions);
 //payment gateway
 router.post('/createOrder',userAuth,PaymentGateway.createOrder)
 router.post('/purchaseSuccess',userAuth,PaymentGateway.paymentSuccess)
+
+//sms apis
+router.post('/sendSms',userAuth,sendSms)
 module.exports = router;
