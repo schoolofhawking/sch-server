@@ -19,6 +19,8 @@ module.exports = {
       });
       let saved = await newAgent.save();
 
+      console.log("__", newAgent);
+      let url = newAgent._id;
       return res.json({
         error: false,
       });
@@ -32,12 +34,28 @@ module.exports = {
   getAllagents: async (req, res) => {
     try {
       console.log("sfa", req.body);
-let data=await agent.find({})
+      let data = await agent.find({});
 
       return res.json({
         error: false,
-        data:data
+        data: data,
       });
+    } catch (err) {
+      console.log(err);
+      return res.json({
+        error: true,
+      });
+    }
+  },
+  updateUsers: async (id) => {
+    console.log("!!!!!!!!!!!!", id);
+    try {
+      await referalAgents.findOneAndUpdate(
+        { _id: id },
+        { $inc: { usersJoined: 1 } }
+      );
+
+      return 0;
     } catch (err) {
       console.log(err);
       return res.json({

@@ -34,7 +34,9 @@ const signupValidation = (data) => {
             .min(6)
             .max(30)
             .messages({ "string.pattern.name": "Invalid password" }),
-        phoneNumber: Joi.string().min(10).required().label("phone number")
+        phoneNumber: Joi.string().min(10).required().label("phone number"),
+        referralId: Joi.any()
+
     })
 
     return Schema.validate(data)

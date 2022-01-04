@@ -45,6 +45,10 @@ const userSchema = new Schema(
             type: ObjectId,
             ref: 'courses',
         }],
+        referredBy:{
+            type:ObjectId,
+            ref:'referalAgents'
+        }
     },
     {timestamps:true}
 );

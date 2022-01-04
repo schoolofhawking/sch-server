@@ -1,6 +1,8 @@
 const RazorPay = require("razorpay");
 const user = require("../models/user");
 const purchase = require("../models/purchase");
+const { AggregationCursor } = require("mongoose");
+const agentController = require("./agentController");
 var instance = new RazorPay({
   key_id: process.env.RAZORPAY_KEY,
   key_secret: process.env.RAZORPAY_SECRET,
@@ -10,7 +12,7 @@ module.exports = {
     console.log("HERE", req.body);
     try {
       const payment_capture = true;
-      const amount = req.body.courseData.actualPrice * 100;
+      const amount = req.body.courseData.discountPrice * 100;
       const currency = "INR";
       const receipt = req.body.id;
       const notes = {
@@ -38,7 +40,7 @@ module.exports = {
     }
   },
   paymentSuccess: async (req, res) => {
-    console.log("PaySucess", req.body);
+    console.log("eeeeeeeee", req.body);
     try {
       let orderDetails = {
         userId: req.body.userData.userId,
@@ -66,13 +68,21 @@ module.exports = {
         });
         newOrder.save();
       }
-      let newUserData=await user.findOne({ _id: req.body.userData.userId })
 
-      res.json({
-        error: false,
-        data:newUserData
+      let newUserData = await user.findOne({ _id: req.body.userData.userId });
+      console.log("22222222", newUserData);
+
+      let NewReferralId = 0;
+      if (newUserData.referredBy) {
+        NewReferralId = newUserData.referredBy;
+      }
+      // updating on agent profile -->payment success so increment affects in it
+      await agentController.updateUsers(NewReferralId).then((result) => {
+        res.json({
+          error: false,
+          data: newUserData,
+        });
       });
-
     } catch (err) {
       console.log(err);
 

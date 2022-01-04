@@ -106,6 +106,7 @@ module.exports = {
 
   signup: async (req, res) => {
     console.log(req.body);
+  
     let params = req.body;
 
     // data validation
@@ -141,6 +142,7 @@ module.exports = {
         email: req.body.email,
         password: hashedPassword,
         mobileNumber: req.body.phoneNumber,
+        referredBy:req.body.referralId
       });
       let savedUser = await user.save();
 
