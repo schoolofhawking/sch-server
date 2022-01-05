@@ -7,7 +7,6 @@ const courseController = require("../controllers/courseController");
 const { userAuth } = require("../middlewares/userAuth");
 const questionController = require("../controllers/questionController");
 const PaymentGateway=require('../controllers/PaymentGateway');
-const { sendSms } = require("../helpers/sms");
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
 
@@ -31,5 +30,5 @@ router.post('/createOrder',userAuth,PaymentGateway.createOrder)
 router.post('/purchaseSuccess',userAuth,PaymentGateway.paymentSuccess)
 
 //sms apis
-router.post('/sendSms',userAuth,sendSms)
+router.post('/getHelp',userAuth,PaymentGateway.getHelp)
 module.exports = router;

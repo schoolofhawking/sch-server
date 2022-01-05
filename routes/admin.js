@@ -5,6 +5,7 @@ const { adminAuth } = require('../middlewares/adminAuth');
 const courseController = require('../controllers/courseController');
 const questionController = require('../controllers/questionController');
 const agentController = require('../controllers/agentController');
+const PaymentGateway=require('../controllers/PaymentGateway');
 
 const router = express.Router();
 
@@ -40,4 +41,5 @@ router.post('/addNewQuestion',adminAuth,questionController.addNewQuestion)
 
 router.post('/addNewAgent',adminAuth,agentController.addNewAgent)
 router.get('/getAllAgents',adminAuth,agentController.getAllagents)
+router.get('/getHelps',adminAuth,PaymentGateway.getAllHelps)
 module.exports = router;

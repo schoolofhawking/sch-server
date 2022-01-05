@@ -1,5 +1,6 @@
 const RazorPay = require("razorpay");
 const user = require("../models/user");
+const help = require("../models/help");
 const purchase = require("../models/purchase");
 const { AggregationCursor } = require("mongoose");
 const agentController = require("./agentController");
@@ -91,4 +92,41 @@ module.exports = {
       });
     }
   },
+
+  getHelp: async (req, res) => {
+    console.log(req.body);
+    try {
+      let newHelp = new help({
+        user: req.body.userId,
+      });
+      await newHelp.save();
+
+      res.json({
+        error: false,
+      });
+    } catch (err) {
+      res.json({
+        error: true,
+      });
+    }
+  },
+
+  getAllHelps:async(req,res)=>{
+
+
+    try {
+    let  data = await help.find().populate({ path: 'user', select: ["_id","fullName", "email","mobileNumber"] })
+
+      console.log("",data)
+
+      res.json({
+        error: false,
+        data:data
+      });
+    } catch (err) {
+      res.json({
+        error: true,
+      });
+    }
+  }
 };
