@@ -323,7 +323,14 @@ module.exports = {
   },
   getProfileData: async (req, res, next) => {
     try {
-      let userData = req.user
+      let userData
+      if(req.user.purchasedCourses)
+      {
+        userData = await User.findOne({_id:req.user._id}).populate('purchasedCourses')
+      }else{
+        userData = req.user
+      }
+      
       let profileData = {
         profileName: userData.fullName,
         profileEmail: userData.email,

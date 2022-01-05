@@ -43,7 +43,7 @@ const userSchema = new Schema(
         },
         purchasedCourses: [{
             type: ObjectId,
-            ref: 'courses',
+            ref: 'course',
         }],
         referredBy:{
             type:ObjectId,
