@@ -1,6 +1,6 @@
 let mongoose = require('mongoose')
 const { Schema } = mongoose;
-const {ObjectId} = mongoose.Schema;
+const { ObjectId } = mongoose.Schema;
 
 const questionSchema = new Schema(
     {
@@ -10,35 +10,66 @@ const questionSchema = new Schema(
             required: [true, "question is required"]
         },
         optionA: {
-            type: String,
-            trim: true,
-            required: [true, "answer Option is required"],
+            option: {
+                type: String,
+                trim: true,
+                required: [true, "answer Option is required"],
+            },
+            departmentId: {
+                type: ObjectId,
+                ref: 'careerDepartment',
+                required: [true, "department is required"],
+            }
         },
         optionB: {
-            type: String,
-            trim: true,
-            required: [true, "answer Option is required"],
+            option: {
+                type: String,
+                trim: true,
+                required: [true, "answer Option is required"],
+            },
+            departmentId: {
+                type: ObjectId,
+                ref: 'careerDepartment',
+                required: [true, "department is required"],
+            }
         },
         optionC: {
-            type: String,
-            trim: true,
-            required: [true, "answer Option is required"],
+            option: {
+                type: String,
+                trim: true,
+                required: [true, "answer Option is required"],
+            },
+            departmentId: {
+                type: ObjectId,
+                ref: 'careerDepartment',
+                required: [true, "department is required"],
+            }
         },
         optionD: {
-            type: String,
-            trim: true,
-            required: [true, "answer Option is required"],
+            option: {
+                type: String,
+                trim: true,
+                required: [true, "answer Option is required"],
+            },
+            departmentId: {
+                type: ObjectId,
+                ref: 'careerDepartment',
+                required: [true, "department is required"],
+            }
         },
         correctAnswer: {
             type: String,
             trim: true,
             required: [true, "answer Option is required"],
         },
-        comments:{
+        comments: {
             type: String,
             trim: true
+        },
+        isActive: {
+            type: Boolean,
+            default: false
         }
-        
     },
     { timestamps: true }
 );
