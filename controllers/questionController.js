@@ -138,12 +138,12 @@ module.exports = {
 
       let departments = {}
 
-      // finding correct answers and making those department's array with question ids
+      // finding correct answers and increasing those department's count
       answers.forEach(async (answer) => {
         let question = allQuestions.find(q => q._id == answer.question_id);
         if (question) {
           if (question.correctAnswer == answer.answer) {
-            departments[`question.option${answer.answer}.departmentId`].push(question._id);
+            departments[`question.option${answer.answer}.departmentId`] += 1;
           }
         }
       });
