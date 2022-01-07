@@ -48,7 +48,15 @@ const userSchema = new Schema(
         referredBy:{
             type:ObjectId,
             ref:'referalAgents'
-        }
+        },
+        interestedCareerDepartment: {
+            type: ObjectId,
+            ref: 'careerDepartment',
+        },
+        interestedCareerDepartmentName: {
+            type: ObjectId,
+            ref: 'careerDepartment',
+        },
     },
     {timestamps:true}
 );
