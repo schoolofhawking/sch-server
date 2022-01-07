@@ -56,13 +56,27 @@ module.exports = {
       );
 
       //  find if course exists in purchase db
-      let exists = await purchase.findOne({ _id: req.body.courseData.id });
+
+    
+      let exists = await purchase.findOne({ courseId: req.body.courseData.id });
       if (exists) {
+
+        console.log("new err happend")
+
+        try{
         await purchase.updateOne(
-          { _id: req.body.courseData.id },
+          { courseId: req.body.courseData.id },
           { $push: { userList: orderDetails } }
         );
+
+        }
+        catch(err)
+        {
+          console.log("its an err")
+        }
       } else {
+
+        console.log("ifffffffffffff",exists)
         var newOrder = new purchase({
           courseId: req.body.courseData.id,
           userList: [orderDetails],
@@ -111,20 +125,58 @@ module.exports = {
     }
   },
 
-  getAllHelps:async(req,res)=>{
-
-
+  getAllHelps: async (req, res) => {
     try {
-    let  data = await help.find().populate({ path: 'user', select: ["_id","fullName", "email","mobileNumber"] })
+      let data = await help
+        .find()
+        .populate({
+          path: "user",
+          select: ["_id", "fullName", "email", "mobileNumber"],
+        });
 
-      console.log("",data)
+      console.log("", data);
 
       res.json({
         error: false,
-        data:data
+        data: data,
       });
     } catch (err) {
       res.json({
+        error: true,
+      });
+    }
+  },
+
+  getAllPayments: async (req, res) => {
+    try {
+      let data = await purchase.find().populate('courseId');
+      res.json({
+        data: data,
+        error: false,
+      });
+    } catch (err) {
+      res.json({
+        data: data,
+        error: true,
+      });
+    }
+  },
+
+  getPaymetDetails:async(req,res)=>{
+
+    try{
+      let data = await purchase.find({_id:req.body.id}).populate('userList.userId')
+      res.json({
+        data: data,
+        error: false,
+      });
+
+      console.log(data)
+    }
+    catch(err)
+    {
+      res.json({
+        data: data,
         error: true,
       });
     }
