@@ -14,7 +14,7 @@ const usersRouter=require('./routes/user')
 const adminRouter=require('./routes/admin')
 const cors = require('cors');
 
-app.use(cors("*"));
+app.use(cors());
 app.use(fileupload())
 
 // connect DB
