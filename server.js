@@ -29,7 +29,7 @@ mongoose
   .catch((err) => console.log("DB CONNECTION ERROR", err));
 
 // apply middlewares
-app.use(cors({credentials: true, origin: process.env.FRONT_END_URL}));
+app.use(cors({credentials: true, origin: "*"}));
 
 
 //serve static files
