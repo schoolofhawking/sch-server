@@ -6,7 +6,7 @@ const courseController = require('../controllers/courseController');
 const questionController = require('../controllers/questionController');
 const agentController = require('../controllers/agentController');
 const PaymentGateway = require('../controllers/PaymentGateway');
-const CareerDepartmentController = require('../controllers/careerDepartmentController');
+// const CareerDepartmentController = require('../controllers/careerDepartmentController');
 
 const router = express.Router();
 
@@ -46,7 +46,7 @@ router.get('/getAllAgents', adminAuth, agentController.getAllagents)
 router.get('/getHelps', adminAuth, PaymentGateway.getAllHelps)
 
 // career department apis
-router.post('/addCareerDepartment', adminAuth, CareerDepartmentController.addDepartment)
+// router.post('/addCareerDepartment', adminAuth, CareerDepartmentController.addDepartment)
 
 //payment related
 router.get('/getPurchases',PaymentGateway.getAllPayments)
