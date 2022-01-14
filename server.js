@@ -1,7 +1,7 @@
 let express =require("express") ;
 let cors =require('cors');
 let mongoose = require("mongoose");
-let fs =require("fs") ;
+let fs = require("fs") ;
 const fileupload = require('express-fileupload')
 const morgan = require("morgan");
 // import cookieParser from "cookie-parser";
@@ -19,7 +19,7 @@ app.use(fileupload())
 // connect DB
 // use this "process.env.LOCAL_MONGO_DB" connection string for local db
 mongoose
-  .connect(process.env.MONGO_DB, {
+  .connect('mongodb://localhost:27017/skill2fly', {
     useNewUrlParser: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
@@ -29,7 +29,8 @@ mongoose
   .catch((err) => console.log("DB CONNECTION ERROR", err));
 
 // apply middlewares
-app.use(cors({credentials: true, origin: "*"}));
+
+app.use(cors({credentials: true, origin: process.env.FRONT_END_URL}));
 
 
 //serve static files

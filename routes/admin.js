@@ -47,6 +47,7 @@ router.get('/getHelps', adminAuth, PaymentGateway.getAllHelps)
 
 // career department apis
 router.post('/addCareerDepartment', adminAuth, CareerDepartmentController.addDepartment)
+router.get('/getCareerDepartments', adminAuth, CareerDepartmentController.getCareerDepartments)
 
 //payment related
 router.get('/getPurchases',PaymentGateway.getAllPayments)
