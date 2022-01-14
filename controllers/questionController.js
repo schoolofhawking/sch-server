@@ -50,25 +50,25 @@ module.exports = {
 
   addNewQuestion: async (req, res) => {
     try {
-      console.log(req.body);
+      console.log('question body___:',req.body);
       // saving new question
       const qns = new questions({
         question: req.body.fieldValues.question,
         optionA: {
-          option: req.body.fieldValues.a.option,
-          departmentId: req.body.fieldValues.a.departmentId
+          option: req.body.fieldValues.a,
+          departmentId: req.body.fieldValues.departmentA
         },
         optionB: {
-          option: req.body.fieldValues.b.option,
-          departmentId: req.body.fieldValues.b.departmentId
+          option: req.body.fieldValues.b,
+          departmentId: req.body.fieldValues.departmentB
         },
         optionC: {
-          option: req.body.fieldValues.c.option,
-          departmentId: req.body.fieldValues.c.departmentId
+          option: req.body.fieldValues.c,
+          departmentId: req.body.fieldValues.departmentC
         },
         optionD: {
-          option: req.body.fieldValues.d.option,
-          departmentId: req.body.fieldValues.d.departmentId
+          option: req.body.fieldValues.d,
+          departmentId: req.body.fieldValues.departmentD
         },
         correctAnswer: req.body.fieldValues.rightAnswer,
         comments: req.body.fieldValues.comments,
