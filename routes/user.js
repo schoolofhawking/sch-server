@@ -37,7 +37,7 @@ router.post('/purchaseSuccess',userAuth,PaymentGateway.paymentSuccess)
 router.post('/getHelp',userAuth,PaymentGateway.getHelp)
 
 // question apis
-router.post("/getQuestions", userAuth, questionController.getActiveQuestions);
+router.get("/getQuestions", userAuth, questionController.getActiveQuestions);
 router.post("/submitTest", userAuth, questionController.submitTest);
 
 module.exports = router;

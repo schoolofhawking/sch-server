@@ -54,7 +54,7 @@ const userSchema = new Schema(
             ref: 'careerDepartment',
         },
         interestedCareerDepartmentName: {
-            type: ObjectId,
+            type: String,
             ref: 'careerDepartment',
         },
     },

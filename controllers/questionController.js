@@ -32,6 +32,7 @@ module.exports = {
   getActiveQuestions: async (req, res) => {
     try {
       let data = await questions.find({ isActive: true });
+      console.log(data);
 
       let response = {}
 
@@ -50,7 +51,7 @@ module.exports = {
 
   addNewQuestion: async (req, res) => {
     try {
-      console.log('question body___:',req.body);
+      console.log('question body___:', req.body);
       // saving new question
       const qns = new questions({
         question: req.body.fieldValues.question,
@@ -121,6 +122,7 @@ module.exports = {
   submitTest: async (req, res) => {
     try {
       // body validation
+      console.log('submit test body:', req.body);
       const dataValidation = await submitTestValidation(req.body);
 
       if (dataValidation.error) {
@@ -133,50 +135,88 @@ module.exports = {
 
       let answers = req.body.answers;
 
+
       // fetching all active questions
       let allQuestions = await questions.find({ isActive: true });
 
-      let departments = {}
+      let departments = {};
+      let totalCorrectAnswers = 0;
+
 
       // finding correct answers and increasing those department's count
-      answers.forEach(async (answer) => {
+      answers.forEach((answer) => {
         let question = allQuestions.find(q => q._id == answer.question_id);
         if (question) {
+          console.log('question_found:', question);
           if (question.correctAnswer == answer.answer) {
-            departments[`question.option${answer.answer}.departmentId`] += 1;
+            let departmentOfThisQuestion = ''
+
+            if (question.correctAnswer == 'A') {
+              departmentOfThisQuestion = question.optionA.departmentId
+            } else if (question.correctAnswer == 'B') {
+              departmentOfThisQuestion = question.optionB.departmentId
+            } else if (question.correctAnswer == 'C') {
+              departmentOfThisQuestion = question.optionC.departmentId
+            } else if (question.correctAnswer == 'D') {
+              departmentOfThisQuestion = question.optionD.departmentId
+            }
+
+            totalCorrectAnswers++
+
+            console.log('departmentOfThisQuestion:', departmentOfThisQuestion);
+
+            if (departments[departmentOfThisQuestion]) {
+              departments[departmentOfThisQuestion] += 1;
+            } else {
+              console.log('in else of departmentOfThisQuestion:', departments);
+              departments[departmentOfThisQuestion] = 1;
+              console.log('in after of departmentOfThisQuestion:', departments);
+
+            }
           }
         }
       });
 
+
       // finding most interested department
-      let interestArr = Object.values(departments);
-      let maxInterest = Math.max(...interestArr);
+      let departmentDetails = '';
 
-      function getKeyByValue(object, value) {
-        return Object.keys(object).find(key => object[key] === value);
+      if (totalCorrectAnswers > 0) {
+        console.log('in if',departments);
+        let interestArr = Object.values(departments);
+        let maxInterest = Math.max(...interestArr);
+
+        function getKeyByValue(object, value) {
+          return Object.keys(object).find(key => object[key] === value);
+        }
+
+        let interestedDepartment = getKeyByValue(departments, maxInterest)
+
+        departmentDetails = await CareerDepartments.findOneAndUpdate({ _id: interestedDepartment }, { $inc: { interestedCount: 1 } });
+      } 
+      // no correct answers
+      else {
+        departmentDetails = await CareerDepartments.findOne({ isDefault: true });
       }
-      let interestedDepartment = getKeyByValue(departments, maxInterest)
 
-      let departmentDetails = await CareerDepartments.findOneAndUpdate({ _id: interestedDepartment }, { $inc: { interestedCount: 1 } });
 
       // adding the interested department to the user
       await User.updateOne(
         { _id: req.user._id },
         {
           $set: {
-            interestedCareerDepartment: interestedDepartment,
+            interestedCareerDepartment: departmentDetails._id,
             interestedCareerDepartmentName: departmentDetails.departmentName,
           },
         }
       );
 
-      let message = `You are most interested in ${departmentDetails.departmentName} department`;
+      let message = `You are most interested in ${departmentDetails.departmentName} category`;
 
       return res.json({
         error: false,
         message: "Test submitted successfully",
         data: {
-          interestedDepartment: departmentDetails,
           message
         },
       });
