@@ -19,7 +19,10 @@ const careerDepartmentSchema = new Schema(
         isActive: {
             type: Boolean,
             default: true 
-        }
+        },
+        isDefault: {
+            type: Boolean,
+        },
     },
     { timestamps: true }
 );
