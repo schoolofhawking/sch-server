@@ -211,7 +211,7 @@ module.exports = {
         }
       );
 
-      let message = `You are most passionated in ${departmentDetails.departmentName} category`;
+      let message = `You are most interested in ${departmentDetails.departmentName} category`;
 
       return res.json({
         error: false,

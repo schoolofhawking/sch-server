@@ -19,7 +19,7 @@ app.use(fileupload())
 // connect DB
 // use this "process.env.LOCAL_MONGO_DB" connection string for local db
 mongoose
-  .connect('mongodb://localhost:27017/skill2fly', {
+  .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
