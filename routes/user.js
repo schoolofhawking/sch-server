@@ -24,8 +24,8 @@ router.post("/updateProfile", userAuth, userController.updateProfile);
 router.post("/updateProfilePic", userAuth, userController.updateProfilePic);
 
 // course api
-router.get("/getCourses", userAuth, courseController.getCourse);
-router.post("/getSingleCourse", userAuth, courseController.getCourseById);
+router.get("/getCourses", courseController.getCourse);
+router.post("/getSingleCourse", courseController.getCourseById);
 
 // questions api
 router.get("/getQuestionsUser", userAuth, questionController.getAllQuestions);

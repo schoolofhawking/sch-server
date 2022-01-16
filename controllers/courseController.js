@@ -300,6 +300,9 @@ module.exports = {
 
         try {
             let courseData = await Courses.findOne({ _id: req.body.id }).populate({ path: 'courseCategory', select: ["_id", "categoryName"] })
+
+            if(req?.user?._id)
+            {
             //checking whether there is a course in purchase collection with course id and whether the user is purchased it or not
             let userPurchased = await Purchase.findOne({ courseId: req.body.id, "userList.userId": req.user._id })
             if(userPurchased)
@@ -320,6 +323,19 @@ module.exports = {
                     subCourse:subCourseData
                 })
             }
+
+        }
+        else
+        {
+            let subCourseData = await SubCourse.find({mainCourseId:req.body.id},{'videoList.videoId':0})
+            return res.json({
+                error:false,
+                purchased:false,
+                mainCourse:courseData,
+                subCourse:subCourseData
+            })
+
+        }
 
         }
         catch (err) {
