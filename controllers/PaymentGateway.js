@@ -57,26 +57,20 @@ module.exports = {
 
       //  find if course exists in purchase db
 
-    
       let exists = await purchase.findOne({ courseId: req.body.courseData.id });
       if (exists) {
+        console.log("new err happend");
 
-        console.log("new err happend")
-
-        try{
-        await purchase.updateOne(
-          { courseId: req.body.courseData.id },
-          { $push: { userList: orderDetails } }
-        );
-
-        }
-        catch(err)
-        {
-          console.log("its an err")
+        try {
+          await purchase.updateOne(
+            { courseId: req.body.courseData.id },
+            { $push: { userList: orderDetails } }
+          );
+        } catch (err) {
+          console.log("its an err");
         }
       } else {
-
-        console.log("ifffffffffffff",exists)
+        console.log("ifffffffffffff", exists);
         var newOrder = new purchase({
           courseId: req.body.courseData.id,
           userList: [orderDetails],
@@ -87,7 +81,7 @@ module.exports = {
       let newUserData = await user.findOne({ _id: req.body.userData.userId });
       console.log("22222222", newUserData);
 
-      let NewReferralId = 0;
+      let NewReferralId = "619cb4de5135751b2800394b";
       if (newUserData.referredBy) {
         NewReferralId = newUserData.referredBy;
       }
@@ -127,12 +121,10 @@ module.exports = {
 
   getAllHelps: async (req, res) => {
     try {
-      let data = await help
-        .find()
-        .populate({
-          path: "user",
-          select: ["_id", "fullName", "email", "mobileNumber"],
-        });
+      let data = await help.find().populate({
+        path: "user",
+        select: ["_id", "fullName", "email", "mobileNumber"],
+      });
 
       console.log("", data);
 
@@ -149,7 +141,7 @@ module.exports = {
 
   getAllPayments: async (req, res) => {
     try {
-      let data = await purchase.find().populate('courseId');
+      let data = await purchase.find().populate("courseId");
       res.json({
         data: data,
         error: false,
@@ -162,23 +154,22 @@ module.exports = {
     }
   },
 
-  getPaymetDetails:async(req,res)=>{
-
-    try{
-      let data = await purchase.find({_id:req.body.id}).populate('userList.userId')
+  getPaymetDetails: async (req, res) => {
+    try {
+      let data = await purchase
+        .find({ _id: req.body.id })
+        .populate("userList.userId");
       res.json({
         data: data,
         error: false,
       });
 
-      console.log(data)
-    }
-    catch(err)
-    {
+      console.log(data);
+    } catch (err) {
       res.json({
         data: data,
         error: true,
       });
     }
-  }
+  },
 };
