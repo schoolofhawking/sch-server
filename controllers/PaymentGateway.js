@@ -52,7 +52,7 @@ module.exports = {
 
       await user.updateOne(
         { _id: req.body.userData.userId },
-        { $push: { purchasedCourses: req.body.courseData.id } }
+        { $addToSet: { purchasedCourses: req.body.courseData.id } }
       );
 
       //  find if course exists in purchase db
