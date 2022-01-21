@@ -30,7 +30,7 @@ mongoose
 
 // apply middlewares
 
-app.use(cors({credentials: true, origin: process.env.FRONT_END_URL}));
+app.use(cors({credentials: true, origin:[process.env.FRONT_END_URL,process.env.LOCALHOST_URL]}));
 
 
 //serve static files
